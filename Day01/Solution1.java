@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Solution {
+public class Solution1 {
 
     public static void main(final String[] args) throws IOException {
         int maxCalories = 0;
