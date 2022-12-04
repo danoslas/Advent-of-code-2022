@@ -12,11 +12,14 @@ public class Solution1 {
                             .map(ranges -> Stream.of(ranges)
                                     .mapToInt(Integer::parseInt)
                                     .toArray())
-                            .mapToInt(ranges -> (ranges[0] <= ranges[2] && ranges[1] >= ranges[3])
-                                    || (ranges[0] >= ranges[2] && ranges[1] <= ranges[3])
-                                    ? 1 : 0)
-                            .sum()
+                            .filter(Solution1::isOverlap)
+                            .count()
             );
         }
+    }
+
+    private static boolean isOverlap(final int[] ranges) {
+        return (ranges[0] <= ranges[2] && ranges[1] >= ranges[3])
+                || (ranges[0] >= ranges[2] && ranges[1] <= ranges[3]);
     }
 }
