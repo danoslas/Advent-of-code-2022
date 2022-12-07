@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Solution1 {
+public class Solution2 {
 
     private static final int BUFFER_SIZE = 14;
 
