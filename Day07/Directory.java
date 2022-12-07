@@ -1,7 +1,4 @@
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 final class Directory {
 
@@ -26,19 +23,18 @@ final class Directory {
         }
     }
 
-    public Directory getParent() {
-        return parent;
+    public Optional<Directory> getParent() {
+        return Optional.ofNullable(parent);
     }
 
     public Collection<Directory> getSubdirectories() {
         return subdirectories;
     }
 
-    public Directory getSubdirectoryByName(final String name) {
+    public Optional<Directory> getSubdirectoryByName(final String name) {
         return subdirectories.stream()
                 .filter(dir -> dir.name.equals(name))
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
     }
 
     public int getSize() {

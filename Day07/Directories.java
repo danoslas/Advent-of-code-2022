@@ -22,8 +22,9 @@ final class Directories {
                 if ((lineMatcher = CD_PATTERN.matcher(line)).find()) {
                     pwd = switch (lineMatcher.group(1)) {
                         case "/" -> root;
-                        case ".." -> pwd.getParent();
-                        default -> pwd.getSubdirectoryByName(lineMatcher.group(1));
+                        case ".." -> pwd.getParent().orElseThrow();
+                        default -> pwd.getSubdirectoryByName(lineMatcher.group(1))
+                                .orElseThrow();
                     };
 
                 } else if ((lineMatcher = DIR_PATTERN.matcher(line)).find()) {
