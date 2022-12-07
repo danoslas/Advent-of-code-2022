@@ -21,6 +21,9 @@ final class Directory {
 
     public void addLocalFileSize(final int size) {
         this.size += size;
+        if (parent != null) {
+            parent.addLocalFileSize(size);
+        }
     }
 
     public Directory getParent() {
@@ -39,9 +42,7 @@ final class Directory {
     }
 
     public int getSize() {
-        return size + subdirectories.stream()
-                .mapToInt(Directory::getSize)
-                .sum();
+        return size;
     }
 
     @Override
