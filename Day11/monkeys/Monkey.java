@@ -35,7 +35,6 @@ public class Monkey {
             inspectionsCount++;
 
             item = worryLevelModify.applyAsLong(item);
-            item /= 3;
 
             final Monkey monkeyToThrowItemTo =
                     monkeys.get(worryLevelTest.test(item) ? testTrueMonkeyId : testFalseMonkeyId);

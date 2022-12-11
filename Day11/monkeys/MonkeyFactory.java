@@ -11,11 +11,22 @@ public class MonkeyFactory {
 
     private MonkeyFactory() {} // Non-instantiable
 
-    public static Monkey createMonkey(final String itemsString,
-                                      final String operationString,
-                                      final String testString,
-                                      final String ifTrueString,
-                                      final String ifFalseString) {
+    public static Monkey createSolution1Monkey(final String itemsString,
+                                               final String operationString,
+                                               final String testString,
+                                               final String ifTrueString,
+                                               final String ifFalseString) {
+
+        return createMonkey(itemsString, operationString, worryLevel -> worryLevel / 3,
+                testString, ifTrueString, ifFalseString);
+    }
+
+    private static Monkey createMonkey(final String itemsString,
+                                       final String operationString,
+                                       final LongUnaryOperator operationDivisor,
+                                       final String testString,
+                                       final String ifTrueString,
+                                       final String ifFalseString) {
 
         final Deque<Long> itemsList = Stream.of(itemsString.substring(18).split(", "))
                 .map(Long::valueOf)
@@ -31,8 +42,8 @@ public class MonkeyFactory {
         }
         final char operationOperator = operationString.charAt(23);
         final LongUnaryOperator operation = old -> switch (operationOperator) {
-            case '*' -> old * operationValue.applyAsLong(old);
-            case '+' -> old + operationValue.applyAsLong(old);
+            case '*' -> operationDivisor.applyAsLong(old * operationValue.applyAsLong(old));
+            case '+' -> operationDivisor.applyAsLong(old + operationValue.applyAsLong(old));
             default -> throw new IllegalStateException("Unexpected operation '" + operationOperator + "'.");
         };
 

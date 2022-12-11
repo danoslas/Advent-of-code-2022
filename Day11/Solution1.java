@@ -17,7 +17,7 @@ public class Solution1 {
         try (final BufferedReader br = Files.newBufferedReader(Path.of("input.txt"))) {
             do {
                 br.readLine();
-                monkeys.add(MonkeyFactory.createMonkey(br.readLine(), br.readLine(),
+                monkeys.add(MonkeyFactory.createSolution1Monkey(br.readLine(), br.readLine(),
                         br.readLine(), br.readLine(), br.readLine()));
             } while (br.readLine() != null);
         }
