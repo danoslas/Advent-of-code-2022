@@ -2,14 +2,13 @@ package monkeys;
 
 import java.util.Deque;
 import java.util.List;
-import java.util.function.LongPredicate;
 import java.util.function.LongUnaryOperator;
 
 public class Monkey {
 
     private final Deque<Long> items;
     private final LongUnaryOperator worryLevelModify;
-    private final LongPredicate worryLevelTest;
+    private final int testDivisor;
     private final int testTrueMonkeyId;
     private final int testFalseMonkeyId;
 
@@ -17,13 +16,13 @@ public class Monkey {
 
     Monkey(final Deque<Long> items,
                   final LongUnaryOperator worryLevelModify,
-                  final LongPredicate worryLevelTest,
+                  final int testDivisor,
                   final int testTrueMonkeyId,
                   final int testFalseMonkeyId) {
 
         this.items = items;
         this.worryLevelModify = worryLevelModify;
-        this.worryLevelTest = worryLevelTest;
+        this.testDivisor = testDivisor;
         this.testTrueMonkeyId = testTrueMonkeyId;
         this.testFalseMonkeyId = testFalseMonkeyId;
     }
@@ -37,7 +36,7 @@ public class Monkey {
             item = worryLevelModify.applyAsLong(item);
 
             final Monkey monkeyToThrowItemTo =
-                    monkeys.get(worryLevelTest.test(item) ? testTrueMonkeyId : testFalseMonkeyId);
+                    monkeys.get(item % testDivisor == 0 ? testTrueMonkeyId : testFalseMonkeyId);
             throwItemToMonkey(item, monkeyToThrowItemTo);
         }
     }

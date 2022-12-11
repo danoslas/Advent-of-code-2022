@@ -2,7 +2,6 @@ package monkeys;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.function.LongPredicate;
 import java.util.function.LongUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,12 +46,11 @@ public class MonkeyFactory {
             default -> throw new IllegalStateException("Unexpected operation '" + operationOperator + "'.");
         };
 
-        final int divisionValue = Integer.parseInt(testString.substring(21));
-        final LongPredicate test = worryLevel -> worryLevel % divisionValue == 0;
+        final int testDivisor = Integer.parseInt(testString.substring(21));
 
         final int testTrueId = Integer.parseInt(ifTrueString.substring(29));
         final int testFalseId = Integer.parseInt(ifFalseString.substring(30));
 
-        return new Monkey(itemsList, operation, test, testTrueId, testFalseId);
+        return new Monkey(itemsList, operation, testDivisor, testTrueId, testFalseId);
     }
 }
