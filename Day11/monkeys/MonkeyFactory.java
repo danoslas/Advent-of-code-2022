@@ -20,6 +20,16 @@ public class MonkeyFactory {
                 testString, ifTrueString, ifFalseString);
     }
 
+    public static Monkey createSolution2Monkey(final String itemsString,
+                                               final String operationString,
+                                               final String testString,
+                                               final String ifTrueString,
+                                               final String ifFalseString) {
+
+        return createMonkey(itemsString, operationString, LongUnaryOperator.identity(),
+                testString, ifTrueString, ifFalseString);
+    }
+
     private static Monkey createMonkey(final String itemsString,
                                        final String operationString,
                                        final LongUnaryOperator operationDivisor,

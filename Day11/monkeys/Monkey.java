@@ -12,13 +12,15 @@ public class Monkey {
     private final int testTrueMonkeyId;
     private final int testFalseMonkeyId;
 
+    private Long lcmDivisor = null;
+
     private int inspectionsCount = 0;
 
     Monkey(final Deque<Long> items,
-                  final LongUnaryOperator worryLevelModify,
-                  final int testDivisor,
-                  final int testTrueMonkeyId,
-                  final int testFalseMonkeyId) {
+           final LongUnaryOperator worryLevelModify,
+           final int testDivisor,
+           final int testTrueMonkeyId,
+           final int testFalseMonkeyId) {
 
         this.items = items;
         this.worryLevelModify = worryLevelModify;
@@ -33,7 +35,11 @@ public class Monkey {
             item = items.pop();
             inspectionsCount++;
 
-            item = worryLevelModify.applyAsLong(item);
+            if (lcmDivisor == null) {
+                item = worryLevelModify.applyAsLong(item);
+            } else {
+                item = worryLevelModify.applyAsLong(item) % lcmDivisor;
+            }
 
             final Monkey monkeyToThrowItemTo =
                     monkeys.get(item % testDivisor == 0 ? testTrueMonkeyId : testFalseMonkeyId);
@@ -43,6 +49,14 @@ public class Monkey {
 
     private void throwItemToMonkey(final long item, final Monkey monkey) {
         monkey.items.push(item);
+    }
+
+    public int getTestDivisor() {
+        return testDivisor;
+    }
+
+    public void setLcmDivisor(final Long lcmDivisor) {
+        this.lcmDivisor = lcmDivisor;
     }
 
     public int getInspectionsCount() {
