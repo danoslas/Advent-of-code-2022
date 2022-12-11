@@ -10,7 +10,7 @@ public class Solution2 {
 
     public static void main(final String[] args) throws IOException {
         int registerX = 1;
-        int processingWait = -1;
+        int processingWait = 0;
 
         try (final BufferedReader br = Files.newBufferedReader(Path.of("input.txt"))) {
             String line = br.readLine();
@@ -18,7 +18,7 @@ public class Solution2 {
                 printPixel(cycle, registerX);
 
                 if (!"noop".equals(line)) {
-                    if (processingWait == -1) {
+                    if (processingWait == 0) {
                         processingWait = WAITING_CYCLES - 1;
                     } else {
                         processingWait--;
@@ -26,7 +26,6 @@ public class Solution2 {
 
                     if (processingWait == 0) {
                         registerX += Integer.parseInt(line.substring(5));
-                        processingWait = -1;
                     } else {
                         continue;
                     }

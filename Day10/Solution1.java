@@ -15,7 +15,7 @@ public class Solution1 {
         try (final BufferedReader br = Files.newBufferedReader(Path.of("input.txt"))) {
             int cycleCheck = 20;
             int registerX = 1;
-            int processingWait = -1;
+            int processingWait = 0;
 
             String line = br.readLine();
             for (int cycle = 1; line != null && cycleCheck <= MAX_CYCLE_CHECK; cycle++) {
@@ -25,7 +25,7 @@ public class Solution1 {
                 }
 
                 if (!"noop".equals(line)) {
-                    if (processingWait == -1) {
+                    if (processingWait == 0) {
                         processingWait = WAITING_CYCLES - 1;
                     } else {
                         processingWait--;
@@ -33,7 +33,6 @@ public class Solution1 {
 
                     if (processingWait == 0) {
                         registerX += Integer.parseInt(line.substring(5));
-                        processingWait = -1;
                     } else {
                         continue;
                     }
