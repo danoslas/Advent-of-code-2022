@@ -1,41 +1,69 @@
 package monkeys;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.function.LongUnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class MonkeyFactory {
 
     private MonkeyFactory() {} // Non-instantiable
 
-    public static Monkey createSolution1Monkey(final String itemsString,
-                                               final String operationString,
-                                               final String testString,
-                                               final String ifTrueString,
-                                               final String ifFalseString) {
-
-        return createMonkey(itemsString, operationString, worryLevel -> worryLevel / 3,
-                testString, ifTrueString, ifFalseString);
+    public static List<Monkey> createSolution1Monkeys(final String fileName) throws IOException {
+        return createMonkeys(fileName, worryLevel -> worryLevel / 3);
     }
 
-    public static Monkey createSolution2Monkey(final String itemsString,
-                                               final String operationString,
-                                               final String testString,
-                                               final String ifTrueString,
-                                               final String ifFalseString) {
+    public static List<Monkey> createSolution2Monkeys(final String fileName) throws IOException {
+        final List<Monkey> monkeys = createMonkeys(fileName, LongUnaryOperator.identity());
+        setMonkeysLcmDivisors(monkeys);
 
-        return createMonkey(itemsString, operationString, LongUnaryOperator.identity(),
-                testString, ifTrueString, ifFalseString);
+        return monkeys;
+    }
+
+    private static void setMonkeysLcmDivisors(final List<Monkey> monkeys) {
+        final long lcm = Utils.leastCommonMultiple(
+                monkeys.get(0).getTestDivisor(),
+                IntStream.range(1, monkeys.size())
+                        .mapToObj(monkeys::get)
+                        .mapToLong(Monkey::getTestDivisor)
+                        .toArray()
+        );
+
+        for (final Monkey monkey : monkeys) {
+            monkey.setLcmDivisor(lcm);
+        }
+    }
+
+    private static List<Monkey> createMonkeys(final String fileName,
+                                              final LongUnaryOperator reliefEvaluator) throws IOException {
+
+        final List<Monkey> monkeys = new ArrayList<>();
+
+        try (final BufferedReader br = Files.newBufferedReader(Path.of(fileName))) {
+            do {
+                br.readLine();
+                monkeys.add(createMonkey(br.readLine(), br.readLine(),
+                        br.readLine(), br.readLine(), br.readLine(), reliefEvaluator));
+            } while (br.readLine() != null);
+        }
+
+        return monkeys;
     }
 
     private static Monkey createMonkey(final String itemsString,
                                        final String operationString,
-                                       final LongUnaryOperator operationDivisor,
                                        final String testString,
                                        final String ifTrueString,
-                                       final String ifFalseString) {
+                                       final String ifFalseString,
+                                       final LongUnaryOperator reliefEvaluator) {
 
         final Deque<Long> itemsList = Stream.of(itemsString.substring(18).split(", "))
                 .map(Long::valueOf)
@@ -51,8 +79,8 @@ public class MonkeyFactory {
         }
         final char operationOperator = operationString.charAt(23);
         final LongUnaryOperator operation = old -> switch (operationOperator) {
-            case '*' -> operationDivisor.applyAsLong(old * operationValue.applyAsLong(old));
-            case '+' -> operationDivisor.applyAsLong(old + operationValue.applyAsLong(old));
+            case '*' -> reliefEvaluator.applyAsLong(old * operationValue.applyAsLong(old));
+            case '+' -> reliefEvaluator.applyAsLong(old + operationValue.applyAsLong(old));
             default -> throw new IllegalStateException("Unexpected operation '" + operationOperator + "'.");
         };
 

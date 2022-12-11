@@ -1,26 +1,14 @@
 import monkeys.Monkey;
 import monkeys.MonkeyFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Solution1 {
 
     public static void main(final String[] args) throws IOException {
-        final List<Monkey> monkeys = new ArrayList<>();
-
-        try (final BufferedReader br = Files.newBufferedReader(Path.of("input.txt"))) {
-            do {
-                br.readLine();
-                monkeys.add(MonkeyFactory.createSolution1Monkey(br.readLine(), br.readLine(),
-                        br.readLine(), br.readLine(), br.readLine()));
-            } while (br.readLine() != null);
-        }
+        final List<Monkey> monkeys = MonkeyFactory.createSolution1Monkeys("input.txt");
 
         for (int i = 0; i < 20; i++) {
             for (final Monkey monkey : monkeys) {

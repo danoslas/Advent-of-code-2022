@@ -1,6 +1,10 @@
-public class Utils {
+package monkeys;
 
-    public static long leastCommonMultiple(final long fst, final long... nums) {
+class Utils {
+
+    private Utils() {} // Non-instantiable
+
+    static long leastCommonMultiple(final long fst, final long... nums) {
         long lcm = fst;
         for (final long num : nums) {
             lcm = lcm * (num / greatestCommonDivisor(lcm, num));

@@ -51,11 +51,11 @@ public class Monkey {
         monkey.items.push(item);
     }
 
-    public int getTestDivisor() {
+    int getTestDivisor() {
         return testDivisor;
     }
 
-    public void setLcmDivisor(final Long lcmDivisor) {
+    void setLcmDivisor(final Long lcmDivisor) {
         this.lcmDivisor = lcmDivisor;
     }
 
