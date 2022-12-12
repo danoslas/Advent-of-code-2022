@@ -27,7 +27,7 @@ public class Solution1 {
                 final int adjVertexDistance = shortestPaths.get(adjacentVertex);
                 shortestPaths.put(
                         adjacentVertex,
-                        Math.min(adjVertexDistance, closestVertexDistance + 1));
+                        Math.min(adjVertexDistance, Math.max(closestVertexDistance, closestVertexDistance + 1)));
             }
 
             unvisitedVertices.remove(closestVertex);
