@@ -3,7 +3,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Maps {
 
@@ -18,23 +20,22 @@ public class Maps {
             while ((line = br.readLine()) != null) {
                 final String[] coordinates = line.split(" -> ");
 
-                final Deque<int[]> points = new ArrayDeque<>();
-                for (final String coordinate : coordinates) {
-                    points.add(Arrays.stream(coordinate.split(","))
+                int[] fst = Arrays.stream(coordinates[0].split(","))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+                for (int i = 1; i < coordinates.length; i++) {
+                    final int[] snd = Arrays.stream(coordinates[i].split(","))
                             .mapToInt(Integer::parseInt)
-                            .toArray());
-                }
-
-                do {
-                    final int[] fst = points.pop();
-                    final int[] snd = points.peek();
+                            .toArray();
 
                     for (int x = Math.min(fst[0], snd[0]); x <= Math.max(fst[0], snd[0]); x++) {
                         for (int y = Math.min(fst[1], snd[1]); y <= Math.max(fst[1], snd[1]); y++) {
                             occupiedPoints.add(new Point(x, y));
                         }
                     }
-                } while (points.size() > 1);
+
+                    fst = snd;
+                }
             }
         }
 
