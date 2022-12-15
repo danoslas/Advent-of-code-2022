@@ -22,8 +22,7 @@ public class Solution1 {
 
         final List<Interval> intervals = sensors.stream()
                 .map(sensor -> sensor.getRowInterval(Integer.MIN_VALUE, Integer.MAX_VALUE, Y_COORDINATE))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .sorted(Comparator.comparingInt(Interval::from))
                 .toList();
         final List<Interval> joined = Interval.unionOverlappingIntervals(intervals);

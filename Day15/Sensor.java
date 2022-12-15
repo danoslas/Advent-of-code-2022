@@ -15,14 +15,15 @@ public class Sensor {
         return Math.abs(xS - xB) + Math.abs(yS - yB);
     }
 
-    public Optional<Interval> getRowInterval(final int x1, final int x2, final int y) {
-        if (Math.abs(y - yS) > radius) {
+    public Optional<Interval> getRowInterval(final int xFrom, final int xTo, final int y) {
+        final int yDistance = Math.abs(y - yS);
+        if (yDistance > radius) {
             return Optional.empty();
         }
 
         return Optional.of(new Interval(
-                Math.max(Math.min(x1, x2), xS - radius + Math.abs(yS - y)),
-                Math.min(Math.max(x1, x2), xS + radius - Math.abs(yS - y))
+                Math.max(xFrom, xS - radius + yDistance),
+                Math.min(xTo, xS + radius - yDistance)
         ));
     }
 }
