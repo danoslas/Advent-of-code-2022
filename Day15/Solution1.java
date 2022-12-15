@@ -25,7 +25,7 @@ public class Solution1 {
                 .flatMap(Optional::stream)
                 .sorted(Comparator.comparingInt(Interval::from))
                 .toList();
-        final List<Interval> joined = Interval.unionOverlappingIntervals(intervals);
+        final List<Interval> joined = Interval.unionIntervals(intervals);
 
         System.out.println(joined.stream().mapToInt(Interval::length).sum());
     }

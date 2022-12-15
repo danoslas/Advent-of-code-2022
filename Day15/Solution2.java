@@ -31,7 +31,7 @@ public class Solution2 {
                     .flatMap(Optional::stream)
                     .sorted(Comparator.comparingInt(Interval::from))
                     .toList();
-            final List<Interval> joined = Interval.unionOverlappingIntervals(intervals);
+            final List<Interval> joined = Interval.unionIntervals(intervals);
 
             if (joined.size() > 1) {
                 System.out.println((long) (joined.get(0).to() + 1) * 4_000_000 + row);

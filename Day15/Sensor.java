@@ -2,12 +2,12 @@ import java.util.Optional;
 
 public class Sensor {
 
-    private final int xS, yS;
+    private final int x, y;
     private final int radius;
 
     public Sensor(final int xS, final int yS, final int xB, final int yB) {
-        this.xS = xS;
-        this.yS = yS;
+        this.x = xS;
+        this.y = yS;
         this.radius = getDistance(xS, yS, xB, yB);
     }
 
@@ -16,14 +16,17 @@ public class Sensor {
     }
 
     public Optional<Interval> getRowInterval(final int xFrom, final int xTo, final int y) {
-        final int yDistance = Math.abs(y - yS);
-        if (yDistance > radius) {
+        final int yDistance = Math.abs(y - this.y);
+        if (yDistance > radius) { // The sensor does not interfere with the y-coordinate
             return Optional.empty();
         }
 
-        return Optional.of(new Interval(
-                Math.max(xFrom, xS - radius + yDistance),
-                Math.min(xTo, xS + radius - yDistance)
-        ));
+        final int start = Math.max(xFrom, x - radius + yDistance);
+        final int end = Math.min(xTo, x + radius - yDistance);
+        if (start > end) { // The sensor does not interfere with the interval [xFrom, xTo]
+            return Optional.empty();
+        }
+
+        return Optional.of(new Interval(start, end));
     }
 }
