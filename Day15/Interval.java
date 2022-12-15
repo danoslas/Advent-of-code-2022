@@ -20,7 +20,6 @@ public record Interval(int from, int to) {
             final Interval snd = intervals.get(i);
 
             if (fstTo >= snd.from) {
-                fstFrom = Math.min(fstFrom, snd.from);
                 fstTo = Math.max(fstTo, snd.to);
             } else {
                 joined.add(new Interval(fstFrom, fstTo));
