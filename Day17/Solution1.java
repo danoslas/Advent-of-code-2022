@@ -27,9 +27,9 @@ public class Solution1 {
         final List<Rock> rocks = new ArrayList<>(MAX_ROUNDS);
         int jetIndex = 0;
 
-        Rock maxHeightRock = RockFactory.getBottomRock();
+        int maxHeight = 0;
         for (int round = 0; round < MAX_ROUNDS; round++) {
-            final Rock rock = RockFactory.getRock(round, maxHeightRock.getTopY());
+            final Rock rock = RockFactory.getRock(round, maxHeight);
 
             while (canRockMove(rock, rocks, Movement.DOWN)) {
                 rock.move(Movement.DOWN);
@@ -52,10 +52,10 @@ public class Solution1 {
             }
 
             rocks.add(rock);
-            maxHeightRock = maxHeightRock.getTopY() > rock.getTopY() ? maxHeightRock : rock;
+            maxHeight = Math.max(rock.getTopY() + 1, maxHeight);
         }
 
-        System.out.println(maxHeightRock.getTopY() + 1);
+        System.out.println(maxHeight);
     }
 
     private static boolean canRockMove(final Rock rock, final Collection<Rock> rocks, final Movement movement) {
