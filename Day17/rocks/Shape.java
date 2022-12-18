@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
-enum Shape {
+public enum Shape {
 
     MINUS(1, new boolean[][] {
             { true, true, true, true }
