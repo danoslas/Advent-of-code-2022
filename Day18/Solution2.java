@@ -16,83 +16,44 @@ public class Solution2 {
                     .collect(Collectors.toMap(point -> point, ignored -> 0));
         }
         final Dimensions dimensions = new Dimensions(
-                cubes.keySet().stream().mapToInt(Point3D::getX).min().orElseThrow(),
-                cubes.keySet().stream().mapToInt(Point3D::getY).min().orElseThrow(),
-                cubes.keySet().stream().mapToInt(Point3D::getZ).min().orElseThrow(),
-                cubes.keySet().stream().mapToInt(Point3D::getX).max().orElseThrow(),
-                cubes.keySet().stream().mapToInt(Point3D::getY).max().orElseThrow(),
-                cubes.keySet().stream().mapToInt(Point3D::getZ).max().orElseThrow()
+                cubes.keySet().stream().mapToInt(Point3D::getX).min().orElseThrow() - 1,
+                cubes.keySet().stream().mapToInt(Point3D::getY).min().orElseThrow() - 1,
+                cubes.keySet().stream().mapToInt(Point3D::getZ).min().orElseThrow() - 1,
+                cubes.keySet().stream().mapToInt(Point3D::getX).max().orElseThrow() + 1,
+                cubes.keySet().stream().mapToInt(Point3D::getY).max().orElseThrow() + 1,
+                cubes.keySet().stream().mapToInt(Point3D::getZ).max().orElseThrow() + 1
         );
 
-        fillPockets(cubes, dimensions);
-        computeSurface(cubes);
+        final Point3D start = new Point3D(dimensions.minX(), dimensions.minY(), dimensions.minZ());
 
-        System.out.println(cubes.size() * 6 - cubes.values().stream().mapToInt(i -> i).sum());
-    }
+        final Deque<Point3D> points = new ArrayDeque<>();
+        final Set<Point3D> visited = new HashSet<>();
+        points.add(start);
+        visited.add(start);
 
-    private static void fillPockets(final Map<Point3D, Integer> cubes, final Dimensions dimensions) {
-        for (int x = dimensions.minX(); x <= dimensions.maxX(); x++) {
-            for (int y = dimensions.minY(); y <= dimensions.maxY(); y++) {
-                for (int z = dimensions.minZ(); z <= dimensions.maxZ(); z++) {
-                    final Point3D point = new Point3D(x, y, z);
-
-                    if (cubes.containsKey(point)) {
-                        continue;
-                    }
-
-                    final Deque<Point3D> points = new ArrayDeque<>();
-                    final Set<Point3D> pocketPoints = new HashSet<>();
-                    points.add(point);
-                    pocketPoints.add(point);
-
-                    boolean isPocket = true;
-                    outerLoop:
-                    while (!points.isEmpty()) {
-                        final Point3D processedPoint = points.pop();
-
-                        for (final Direction direction : Direction.values()) {
-                            final int xNew = processedPoint.getX() + direction.getX();
-                            final int yNew = processedPoint.getY() + direction.getY();
-                            final int zNew = processedPoint.getZ() + direction.getZ();
-
-                            // From the 'point' we can reach the outside -> it is not a pocket
-                            if (dimensions.isOutside(xNew, yNew, zNew)) {
-                                isPocket = false;
-                                break outerLoop;
-                            }
-
-                            final Point3D spacePointCopy = new Point3D(xNew, yNew, zNew);
-                            if (!cubes.containsKey(spacePointCopy) && !pocketPoints.contains(spacePointCopy)) {
-                                points.add(spacePointCopy);
-                                pocketPoints.add(spacePointCopy);
-                            }
-                        }
-                    }
-
-                    if (isPocket) {
-                        for (final Point3D pocketPoint : pocketPoints) {
-                            cubes.put(pocketPoint, 0);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static void computeSurface(final Map<Point3D, Integer> cubes) {
-        final Point3D point = new Point3D(0, 0, 0);
-        for (final Map.Entry<Point3D, Integer> cubeNeighbours : cubes.entrySet()) {
-            final Point3D cube = cubeNeighbours.getKey();
+        while (!points.isEmpty()) {
+            final Point3D point = points.pop();
 
             for (final Direction direction : Direction.values()) {
-                point.move(cube.getX() + direction.getX(),
-                        cube.getY() + direction.getY(),
-                        cube.getZ() + direction.getZ());
+                final int xNew = point.getX() + direction.getX();
+                final int yNew = point.getY() + direction.getY();
+                final int zNew = point.getZ() + direction.getZ();
 
-                if (cubes.containsKey(point)) {
-                    cubeNeighbours.setValue(cubeNeighbours.getValue() + 1);
+                final Point3D pointNeighbour;
+                if (dimensions.isOutside(xNew, yNew, zNew)
+                        || visited.contains((pointNeighbour = new Point3D(xNew, yNew, zNew)))) {
+                    continue;
+                }
+
+                if (cubes.containsKey(pointNeighbour)) {
+                    cubes.compute(pointNeighbour, (pointIgnored, old) -> old + 1);
+                } else {
+                    points.add(pointNeighbour);
+                    visited.add(pointNeighbour);
                 }
             }
         }
+
+        System.out.println(cubes.values().stream().mapToInt(i -> i).sum());
     }
 }

@@ -17,12 +17,6 @@ public class Solution1 {
                     .collect(Collectors.toMap(point -> point, ignored -> 0));
         }
 
-        computeSurface(cubes);
-
-        System.out.println(cubes.size() * 6 - cubes.values().stream().mapToInt(i -> i).sum());
-    }
-
-    private static void computeSurface(final Map<Point3D, Integer> cubes) {
         final Point3D point = new Point3D(0, 0, 0);
         for (final Map.Entry<Point3D, Integer> cubeNeighbours : cubes.entrySet()) {
             final Point3D cube = cubeNeighbours.getKey();
@@ -37,5 +31,7 @@ public class Solution1 {
                 }
             }
         }
+
+        System.out.println(cubes.size() * 6 - cubes.values().stream().mapToInt(i -> i).sum());
     }
 }
