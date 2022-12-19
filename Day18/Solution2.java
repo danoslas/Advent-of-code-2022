@@ -50,23 +50,21 @@ public class Solution2 {
                     while (!points.isEmpty()) {
                         final Point3D processedPoint = points.pop();
 
-                        for (int i = 1; i <= 4; i <<= 1) {
-                            for (int j = -1; j <= 1; j += 2) {
-                                final int xNew = processedPoint.getX() + ((i & 1) * j);
-                                final int yNew = processedPoint.getY() + (((i & 2) >> 1) * j);
-                                final int zNew = processedPoint.getZ() + (((i & 4) >> 2) * j);
+                        for (final Direction direction : Direction.values()) {
+                            final int xNew = processedPoint.getX() + direction.getX();
+                            final int yNew = processedPoint.getY() + direction.getY();
+                            final int zNew = processedPoint.getZ() + direction.getZ();
 
-                                // From the 'point' we can reach the outside -> it is not a pocket
-                                if (dimensions.isOutside(xNew, yNew, zNew)) {
-                                    isPocket = false;
-                                    break outerLoop;
-                                }
+                            // From the 'point' we can reach the outside -> it is not a pocket
+                            if (dimensions.isOutside(xNew, yNew, zNew)) {
+                                isPocket = false;
+                                break outerLoop;
+                            }
 
-                                final Point3D spacePointCopy = new Point3D(xNew, yNew, zNew);
-                                if (!cubes.containsKey(spacePointCopy) && !pocketPoints.contains(spacePointCopy)) {
-                                    points.add(spacePointCopy);
-                                    pocketPoints.add(spacePointCopy);
-                                }
+                            final Point3D spacePointCopy = new Point3D(xNew, yNew, zNew);
+                            if (!cubes.containsKey(spacePointCopy) && !pocketPoints.contains(spacePointCopy)) {
+                                points.add(spacePointCopy);
+                                pocketPoints.add(spacePointCopy);
                             }
                         }
                     }
@@ -86,15 +84,13 @@ public class Solution2 {
         for (final Map.Entry<Point3D, Integer> cubeNeighbours : cubes.entrySet()) {
             final Point3D cube = cubeNeighbours.getKey();
 
-            for (int i = 1; i <= 4; i <<= 1) {
-                for (int j = -1; j <= 1; j += 2) {
-                    point.move(cube.getX() + ((i & 1) * j),
-                            cube.getY() + (((i & 2) >> 1) * j),
-                            cube.getZ() + (((i & 4) >> 2) * j));
+            for (final Direction direction : Direction.values()) {
+                point.move(cube.getX() + direction.getX(),
+                        cube.getY() + direction.getY(),
+                        cube.getZ() + direction.getZ());
 
-                    if (cubes.containsKey(point)) {
-                        cubeNeighbours.setValue(cubeNeighbours.getValue() + 1);
-                    }
+                if (cubes.containsKey(point)) {
+                    cubeNeighbours.setValue(cubeNeighbours.getValue() + 1);
                 }
             }
         }

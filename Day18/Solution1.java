@@ -27,15 +27,13 @@ public class Solution1 {
         for (final Map.Entry<Point3D, Integer> cubeNeighbours : cubes.entrySet()) {
             final Point3D cube = cubeNeighbours.getKey();
 
-            for (int i = 1; i <= 4; i <<= 1) {
-                for (int j = -1; j <= 1; j += 2) {
-                    point.move(cube.getX() + ((i & 1) * j),
-                            cube.getY() + (((i & 2) >> 1) * j),
-                            cube.getZ() + (((i & 4) >> 2) * j));
+            for (final Direction direction : Direction.values()) {
+                point.move(cube.getX() + direction.getX(),
+                        cube.getY() + direction.getY(),
+                        cube.getZ() + direction.getZ());
 
-                    if (cubes.containsKey(point)) {
-                        cubeNeighbours.setValue(cubeNeighbours.getValue() + 1);
-                    }
+                if (cubes.containsKey(point)) {
+                    cubeNeighbours.setValue(cubeNeighbours.getValue() + 1);
                 }
             }
         }
